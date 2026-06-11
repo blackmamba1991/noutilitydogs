@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoUtilityDogs — Whitelist</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:   #0A0A0A;
+    --dark:    #111111;
+    --card:    #181818;
+    --border:  #2a2a2a;
+    --blue:    #1A6FFF;
+    --blue-glow: rgba(26,111,255,0.25);
+    --white:   #F0F0F0;
+    --muted:   #888;
+    --danger:  #FF4444;
+    --success: #22C55E;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GLOW BG ── */
+  .glow-bg {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse at center, rgba(26,111,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo span { color: var(--blue); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--blue);
+    color: var(--white) !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700 !important;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.85; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,111,255,0.1);
+    border: 1px solid rgba(26,111,255,0.3);
+    color: var(--blue);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: clamp(52px, 9vw, 120px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--blue);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2.5vw, 20px);
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+
+  .hero-sub strong { color: var(--white); }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-bottom: 64px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .stat-num span { color: var(--blue); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── DOG SHOWCASE ── */
+  .dogs-strip {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 0 0 80px;
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  }
+
+  .dogs-track {
+    display: flex;
+    gap: 16px;
+    animation: scroll-dogs 30s linear infinite;
+    width: max-content;
+  }
+
+  .dogs-track:hover { animation-play-state: paused; }
+
+  @keyframes scroll-dogs {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .dog-card {
+    width: 140px;
+    height: 140px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--card);
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .dog-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--blue);
+  }
+
+  .dog-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── MINT INFO ── */
+  .mint-info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 24px 80px;
+  }
+
+  .mint-phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 32px;
+    min-width: 200px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .mint-phase:hover { border-color: var(--blue); }
+
+  .phase-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .phase-price {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .phase-price span { color: var(--blue); }
+
+  .phase-note {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .phase-gtd {
+    border-color: rgba(26,111,255,0.4);
+    background: rgba(26,111,255,0.05);
+  }
+
+  /* ── WL FORM SECTION ── */
+  #whitelist {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+
+  /* ── FORM ── */
+  .wl-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .field-label .required {
+    color: var(--blue);
+    font-size: 16px;
+  }
+
+  .field-input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .field-input::placeholder { color: #444; }
+
+  .field-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-glow);
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: #555;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-btn {
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    padding: 18px 32px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── STATUS MESSAGES ── */
+  .form-status {
+    display: none;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .form-status.success {
+    display: block;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: var(--success);
+  }
+
+  .form-status.error {
+    display: block;
+    background: rgba(255,68,68,0.1);
+    border: 1px solid rgba(255,68,68,0.3);
+    color: var(--danger);
+  }
+
+  /* ── COUNTER ── */
+  .wl-counter {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .counter-label { font-size: 13px; color: var(--muted); }
+
+  .counter-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .counter-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+
+  .counter-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+    width: 23%;
+    transition: width 1s ease;
+  }
+
+  /* ── FAQ ── */
+  .faq {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+  }
+
+  .faq-q {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  .faq-a {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .faq-a a { color: var(--blue); text-decoration: none; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  footer a { color: var(--blue); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 24px; }
+    .stat-num { font-size: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dogs-track { animation: none; }
+    .hero-badge::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🐕 <span>No</span>UtilityDogs</div>
+  <ul class="nav-links">
+    <li><a href="#whitelist">Whitelist</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://opensea.io/NoUtilityDogs" target="_blank">OpenSea</a></li>
+    <li><a href="#whitelist" class="nav-cta">Get WL →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Whitelist Open</div>
+  <h1>NO<em>UTILITY</em>DOGS</h1>
+  <p class="hero-sub">
+    <strong>3,333 good boys with degen energy.</strong><br>
+    No utility. No promises. No roadmap.<br>
+    Just dogs. Built for absolutely nothing. WAGMI 🦴
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3<span>,</span>333</div>
+      <div class="stat-label">Supply</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0<span>.</span>001</div>
+      <div class="stat-label">GTD Price</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0<span>.</span>002</div>
+      <div class="stat-label">Public Price</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">ETH</div>
+      <div class="stat-label">Network</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOGS STRIP (placeholder cards) -->
+<div class="dogs-strip">
+  <div class="dogs-track" id="dogsTrack">
+    <!-- Cards generated by JS -->
+  </div>
+</div>
+
+<!-- MINT PHASES -->
+<div class="mint-info">
+  <div class="mint-phase phase-gtd">
+    <div class="phase-label">Phase 1 — GTD</div>
+    <div class="phase-price">0.001 <span>ETH</span></div>
+    <div class="phase-note">Whitelist holders only</div>
+  </div>
+  <div class="mint-phase">
+    <div class="phase-label">Phase 2 — Public</div>
+    <div class="phase-price">0.002 <span>ETH</span></div>
+    <div class="phase-note">Open to everyone</div>
+  </div>
+  <div class="mint-phase">
+    <div class="phase-label">Royalties</div>
+    <div class="phase-price">5<span>%</span></div>
+    <div class="phase-note">Secondary sales</div>
+  </div>
+</div>
+
+<!-- WL FORM -->
+<section id="whitelist">
+  <div class="section-eyebrow">// Whitelist Registration</div>
+  <h2 class="section-title">Secure Your<br>WL Spot</h2>
+  <p class="section-sub">
+    Limited spots available. Fill in the form below — 
+    we'll select wallets from the list before mint day.
+    RT the announcement post to qualify.
+  </p>
+
+  <!-- Counter -->
+  <div class="wl-counter">
+    <div>
+      <div class="counter-label">WL Spots Claimed</div>
+      <div class="counter-bar"><div class="counter-fill" id="counterFill"></div></div>
+    </div>
+    <div class="counter-num" id="counterNum">—</div>
+  </div>
+
+  <!-- Form -->
+  <form class="wl-form" id="wlForm">
+    <div class="field-group">
+      <label class="field-label" for="twitter">
+        Twitter / X handle <span class="required">*</span>
+      </label>
+      <input class="field-input" type="text" id="twitter" name="twitter"
+        placeholder="@yourhandle" required autocomplete="off">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="email">
+        Email <span class="required">*</span>
+      </label>
+      <input class="field-input" type="email" id="email" name="email"
+        placeholder="you@example.com" required>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="wallet">
+        ETH Wallet Address <span class="required">*</span>
+      </label>
+      <input class="field-input" type="text" id="wallet" name="wallet"
+        placeholder="0x..." required autocomplete="off">
+      <span class="field-hint">ERC-721 compatible (MetaMask, Coinbase Wallet, etc.)</span>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="retweet">
+        Link to your Retweet <span class="required">*</span>
+      </label>
+      <input class="field-input" type="url" id="retweet" name="retweet"
+        placeholder="https://x.com/yourhandle/status/..." required>
+      <span class="field-hint">RT our announcement post and paste the link here</span>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+      Apply for Whitelist →
+    </button>
+
+    <div class="form-status" id="formStatus"></div>
+  </form>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-eyebrow">// FAQ</div>
+  <h2 class="section-title" style="margin-bottom:32px">Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">What is NoUtilityDogs?</div>
+    <div class="faq-a">3,333 unique PFP dogs on Ethereum. No utility, no roadmap, no promises. Just good boys with degen energy and a tight community behind them.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">How do I get on the Whitelist?</div>
+    <div class="faq-a">RT our announcement post on X, then fill in the form above with your Twitter, email, ETH wallet and retweet link. WL spots are limited and selected manually.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What's the mint price?</div>
+    <div class="faq-a">GTD (WL) phase: <strong>0.001 ETH</strong>. Public phase: <strong>0.002 ETH</strong>. Royalties on secondary: 5%.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What network?</div>
+    <div class="faq-a">Ethereum mainnet (ERC-721). Make sure your wallet supports ETH transactions.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">When is mint?</div>
+    <div class="faq-a">TBA. Follow <a href="https://x.com" target="_blank">@NoUtilityDogs</a> on X for the announcement.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>🐕 NoUtilityDogs — Built for absolutely nothing. WAGMI 🦴</p>
+  <p style="margin-top:8px">
+    <a href="https://opensea.io/NoUtilityDogs" target="_blank">OpenSea</a> · 
+    <a href="https://x.com" target="_blank">Twitter/X</a>
+  </p>
+</footer>
+
+<script>
+// ── DOG CARDS (placeholder colored cards until real images are hosted) ──
+const colors = ['#1A6FFF','#6B3FA0','#C0392B','#2ECC71','#E67E22','#1ABC9C','#E74C3C','#3498DB'];
+const track = document.getElementById('dogsTrack');
+const emojis = ['🐕','🐶','🦴','🐾','😤','😎','🤙','💎','🔥','🐕‍🦺'];
+
+function makeCard(i) {
+  const card = document.createElement('div');
+  card.className = 'dog-card';
+  card.style.background = colors[i % colors.length];
+  card.style.display = 'flex';
+  card.style.alignItems = 'center';
+  card.style.justifyContent = 'center';
+  card.style.fontSize = '48px';
+  card.textContent = emojis[i % emojis.length];
+  return card;
+}
+
+// Create 20 cards, duplicate for seamless loop
+for (let i = 0; i < 40; i++) {
+  track.appendChild(makeCard(i));
+}
+
+// ── COUNTER (simulated — replace with real Google Sheets count) ──
+const TOTAL_WL = 500;
+let count = Math.floor(Math.random() * 80) + 100; // simulated
+
+function updateCounter(n) {
+  document.getElementById('counterNum').textContent = n + ' / ' + TOTAL_WL;
+  const pct = (n / TOTAL_WL * 100).toFixed(1);
+  document.getElementById('counterFill').style.width = pct + '%';
+}
+updateCounter(count);
+
+// ── FORM SUBMIT → GOOGLE SHEETS ──
+// REPLACE THIS URL with your Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+const form = document.getElementById('wlForm');
+const statusEl = document.getElementById('formStatus');
+const submitBtn = document.getElementById('submitBtn');
+
+function validateWallet(addr) {
+  return /^0x[a-fA-F0-9]{40}$/.test(addr);
+}
+
+function validateTwitter(handle) {
+  return handle.startsWith('@') && handle.length > 1;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  statusEl.className = 'form-status';
+  statusEl.textContent = '';
+
+  const twitter  = document.getElementById('twitter').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const wallet   = document.getElementById('wallet').value.trim();
+  const retweet  = document.getElementById('retweet').value.trim();
+
+  // Validation
+  if (!validateTwitter(twitter)) {
+    statusEl.className = 'form-status error';
+    statusEl.textContent = '❌ Twitter handle must start with @';
+    return;
+  }
+
+  if (!validateWallet(wallet)) {
+    statusEl.className = 'form-status error';
+    statusEl.textContent = '❌ Invalid ETH wallet address (must start with 0x and be 42 chars)';
+    return;
+  }
+
+  if (!retweet.includes('x.com') && !retweet.includes('twitter.com')) {
+    statusEl.className = 'form-status error';
+    statusEl.textContent = '❌ Retweet link must be from x.com or twitter.com';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  try {
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      // Demo mode — no real submission
+      await new Promise(r => setTimeout(r, 1200));
+      statusEl.className = 'form-status success';
+      statusEl.textContent = '✅ You\'re on the list! We\'ll reach out before mint. WAGMI 🦴';
+      form.reset();
+      count++;
+      updateCounter(count);
+    } else {
+      const params = new URLSearchParams({ twitter, email, wallet, retweet,
+        timestamp: new Date().toISOString() });
+      await fetch(GOOGLE_SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
+      statusEl.className = 'form-status success';
+      statusEl.textContent = '✅ You\'re on the list! We\'ll reach out before mint. WAGMI 🦴';
+      form.reset();
+      count++;
+      updateCounter(count);
+    }
+  } catch (err) {
+    statusEl.className = 'form-status error';
+    statusEl.textContent = '❌ Something went wrong. DM us on X instead.';
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Apply for Whitelist →';
+});
+</script>
+</body>
+</html>
