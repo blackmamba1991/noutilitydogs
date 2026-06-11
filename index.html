@@ -700,27 +700,32 @@
 </footer>
 
 <script>
-// ── DOG CARDS (placeholder colored cards until real images are hosted) ──
-const colors = ['#1A6FFF','#6B3FA0','#C0392B','#2ECC71','#E67E22','#1ABC9C','#E74C3C','#3498DB'];
-const track = document.getElementById('dogsTrack');
-const emojis = ['🐕','🐶','🦴','🐾','😤','😎','🤙','💎','🔥','🐕‍🦺'];
+// ── DOG CARDS (real images from GitHub) ──
+const BASE = 'https://raw.githubusercontent.com/blackmamba1991/noutilitydogs/main/';
+const dogFiles = [
+  '3244.webp','3245.webp','3250.webp','3251.webp','3252.webp',
+  '3253.webp','3254.webp','3255.webp','3256.webp','3257.webp',
+  '3259.webp','3260.webp','3261.webp','3275.webp','3276.webp',
+  '3278.webp','3279.webp','3280.webp','3281.webp','3286.webp',
+  '3287.webp'
+];
 
-function makeCard(i) {
+const track = document.getElementById('dogsTrack');
+
+function makeCard(src) {
   const card = document.createElement('div');
   card.className = 'dog-card';
-  card.style.background = colors[i % colors.length];
-  card.style.display = 'flex';
-  card.style.alignItems = 'center';
-  card.style.justifyContent = 'center';
-  card.style.fontSize = '48px';
-  card.textContent = emojis[i % emojis.length];
+  const img = document.createElement('img');
+  img.src = BASE + src;
+  img.alt = 'NoUtilityDog';
+  img.loading = 'lazy';
+  card.appendChild(img);
   return card;
 }
 
-// Create 20 cards, duplicate for seamless loop
-for (let i = 0; i < 40; i++) {
-  track.appendChild(makeCard(i));
-}
+// Create cards, duplicate for seamless loop
+const allDogs = [...dogFiles, ...dogFiles];
+allDogs.forEach(src => track.appendChild(makeCard(src)));
 
 // ── COUNTER (simulated — replace with real Google Sheets count) ──
 const TOTAL_WL = 500;
