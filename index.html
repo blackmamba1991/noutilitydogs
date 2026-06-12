@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>NoUtilityDogs — Whitelist</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -671,17 +671,192 @@
   footer a { color: var(--blue); text-decoration: none; }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    nav { padding: 16px 20px; }
+  @media (max-width: 768px) {
+    nav { padding: 14px 16px; }
     .nav-links { display: none; }
-    .hero-stats { gap: 24px; }
-    .stat-num { font-size: 24px; }
+    
+    .hero { min-height: 85vh; padding: 100px 16px 60px; }
+    
+    .about-section {
+      grid-template-columns: 1fr;
+      padding: 40px 16px 24px;
+      gap: 16px;
+    }
+    
+    .info-card { padding: 20px; }
+    .info-card-value { font-size: 28px; }
+    
+    .mint-info { padding: 0 16px 48px; gap: 12px; }
+    .mint-phase { min-width: unset; width: 100%; padding: 20px; }
+    
+    #whitelist { padding: 0 16px 80px; }
+    .section-title { font-size: 32px; }
+    
+    .wl-counter { flex-direction: column; align-items: flex-start; gap: 8px; }
+    
+    .field-input { font-size: 16px; padding: 14px; }
+    .submit-btn { font-size: 15px; padding: 16px; }
+    
+    .faq { padding: 0 16px 80px; }
+    .faq-q { font-size: 15px; }
+    
+    .dog-card { width: 110px; height: 110px; }
+    
+    footer { padding: 32px 16px; }
+
+    .hero-scroll-hint { bottom: 20px; }
+  }
+
+  @media (max-width: 400px) {
+    .nav-logo { font-size: 14px; }
+    .nav-cta { padding: 8px 14px; font-size: 13px; }
+    .info-card-value { font-size: 24px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .dogs-track { animation: none; }
     .hero-badge::before { animation: none; }
   }
+
+  /* ══ FABLE UPGRADES ══ */
+
+  ::selection { background: var(--blue); color: #fff; }
+
+  :root { --yellow: #F5B82E; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Graffiti marquee divider */
+  .marquee-divider {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background: var(--yellow);
+    transform: rotate(-1.2deg);
+    margin: 20px -20px 60px;
+    padding: 10px 0;
+  }
+  .marquee-inner {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: marquee-scroll 22s linear infinite;
+  }
+  .marquee-inner span {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0A0A0A;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    padding-right: 24px;
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Dog cards — playful hover */
+  .dog-card { cursor: pointer; }
+  .dog-card:hover {
+    transform: translateY(-6px) rotate(-2deg) scale(1.04);
+    border-color: var(--yellow);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  }
+
+  /* Second strip reversed */
+  .dogs-track.reverse {
+    animation-direction: reverse;
+    animation-duration: 36s;
+  }
+
+  /* Info cards — corner tag */
+  .info-card { position: relative; overflow: hidden; }
+  .info-card::after {
+    content: '🦴';
+    position: absolute;
+    right: -6px;
+    bottom: -10px;
+    font-size: 48px;
+    opacity: 0.06;
+    transform: rotate(-20deg);
+  }
+
+  /* FAQ accordion */
+  .faq-item { cursor: pointer; user-select: none; }
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    transition: color 0.2s;
+  }
+  .faq-item:hover .faq-q { color: var(--blue); }
+  .faq-q::after {
+    content: '+';
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    color: var(--blue);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+  }
+  .faq-item.open .faq-a { max-height: 200px; margin-top: 10px; }
+
+  /* Submit button — bone shake on hover */
+  .submit-btn::after {
+    content: ' 🦴';
+    display: inline-block;
+    transition: transform 0.3s;
+  }
+  .submit-btn:hover::after { transform: rotate(-20deg) translateX(3px); }
+
+  /* Sticky mobile CTA */
+  .sticky-cta {
+    display: none;
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 90;
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 15px;
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(26,111,255,0.45);
+  }
+
+  @media (max-width: 768px) {
+    .sticky-cta { display: block; }
+    footer { padding-bottom: 90px; }
+    .marquee-divider { margin: 16px -16px 40px; }
+  }
+
+  /* Back-to-top of nav logo crown */
+  .nav-logo::after {
+    content: '👑';
+    font-size: 12px;
+    margin-left: 2px;
+    opacity: 0.8;
+  }
+
 </style>
 </head>
 <body>
@@ -708,54 +883,61 @@
 <section class="about-section">
   <div class="about-tagline">
     <h2>Good boys.<br><em style="font-style:normal;color:var(--blue)">Zero promises.</em></h2>
-    <p>3,333 unique dogs on Ethereum. No utility, no roadmap, no VC backing. Just a tight community of degens who like dogs and hate bullshit.</p>
+    <p>250 unique dogs on Base. No utility, no roadmap, no VC backing. Just a tight community of degens who like dogs and hate bullshit.</p>
   </div>
 
-  <div class="info-card">
+  <div class="info-card reveal">
     <div class="info-card-label">Supply</div>
-    <div class="info-card-value">3<span>,</span>333</div>
-    <div class="info-card-note">Unique PFP dogs on Ethereum mainnet</div>
+    <div class="info-card-value">250</div>
+    <div class="info-card-note">Unique PFP dogs on Base network</div>
   </div>
 
-  <div class="info-card">
+  <div class="info-card reveal">
     <div class="info-card-label">Network</div>
     <div class="info-card-value"><span>ETH</span></div>
     <div class="info-card-note">ERC-721 standard. Your wallet, your dog.</div>
   </div>
 
-  <div class="info-card">
+  <div class="info-card reveal">
     <div class="info-card-label">GTD Mint — Whitelist</div>
-    <div class="info-card-value">0<span>.</span>001 <span style="font-size:20px">ETH</span></div>
+    <div class="info-card-value"><span>FREE</span></div>
     <div class="info-card-note">Priority access for WL holders. Limited spots.</div>
   </div>
 
-  <div class="info-card">
+  <div class="info-card reveal">
     <div class="info-card-label">Public Mint</div>
-    <div class="info-card-value">0<span>.</span>002 <span style="font-size:20px">ETH</span></div>
+    <div class="info-card-value"><span>FREE</span></div>
     <div class="info-card-note">Open to everyone after WL phase ends.</div>
   </div>
 </section>
 
-<!-- DOGS STRIP (placeholder cards) -->
+
+<!-- MARQUEE DIVIDER -->
+<div class="marquee-divider">
+  <div class="marquee-inner" id="marqueeInner"></div>
+</div>
+
+<!-- DOGS STRIP -->
 <div class="dogs-strip">
-  <div class="dogs-track" id="dogsTrack">
-    <!-- Cards generated by JS -->
-  </div>
+  <div class="dogs-track" id="dogsTrack"></div>
+</div>
+<div class="dogs-strip" style="padding-top:16px">
+  <div class="dogs-track reverse" id="dogsTrack2"></div>
 </div>
 
 <!-- MINT PHASES -->
 <div class="mint-info">
-  <div class="mint-phase phase-gtd">
+  <div class="mint-phase reveal phase-gtd">
     <div class="phase-label">Phase 1 — GTD</div>
-    <div class="phase-price">0.001 <span>ETH</span></div>
+    <div class="phase-price">FREE <span>🦴</span></div>
     <div class="phase-note">Whitelist holders only</div>
   </div>
-  <div class="mint-phase">
+  <div class="mint-phase reveal">
     <div class="phase-label">Phase 2 — Public</div>
-    <div class="phase-price">0.002 <span>ETH</span></div>
+    <div class="phase-price">FREE <span>🦴</span></div>
     <div class="phase-note">Open to everyone</div>
   </div>
-  <div class="mint-phase">
+  <div class="mint-phase reveal">
     <div class="phase-label">Royalties</div>
     <div class="phase-price">5<span>%</span></div>
     <div class="phase-note">Secondary sales</div>
@@ -822,34 +1004,36 @@
   <div class="section-eyebrow">// FAQ</div>
   <h2 class="section-title" style="margin-bottom:32px">Questions</h2>
 
-  <div class="faq-item">
+  <div class="faq-item reveal">
     <div class="faq-q">What is NoUtilityDogs?</div>
     <div class="faq-a">3,333 unique PFP dogs on Ethereum. No utility, no roadmap, no promises. Just good boys with degen energy and a tight community behind them.</div>
   </div>
-  <div class="faq-item">
+  <div class="faq-item reveal">
     <div class="faq-q">How do I get on the Whitelist?</div>
-    <div class="faq-a">RT our announcement post on X, then fill in the form above with your Twitter, email, ETH wallet and retweet link. WL spots are limited and selected manually.</div>
+    <div class="faq-a">RT our announcement post on X, then fill in the form above with your Twitter handle, retweet link and ETH wallet. WL spots are limited and selected manually.</div>
   </div>
-  <div class="faq-item">
+  <div class="faq-item reveal">
     <div class="faq-q">What's the mint price?</div>
-    <div class="faq-a">GTD (WL) phase: <strong>0.001 ETH</strong>. Public phase: <strong>0.002 ETH</strong>. Royalties on secondary: 5%.</div>
+    <div class="faq-a">GTD (WL) phase: <strong>FREE</strong>. Public phase: <strong>FREE</strong>. Royalties on secondary: 5%.</div>
   </div>
-  <div class="faq-item">
+  <div class="faq-item reveal">
     <div class="faq-q">What network?</div>
-    <div class="faq-a">Ethereum mainnet (ERC-721). Make sure your wallet supports ETH transactions.</div>
+    <div class="faq-a">Base network (ERC-721). Fast and cheap — make sure your wallet supports Base.</div>
   </div>
-  <div class="faq-item">
+  <div class="faq-item reveal">
     <div class="faq-q">When is mint?</div>
-    <div class="faq-a">TBA. Follow <a href="https://x.com" target="_blank">@NoUtilityDogs</a> on X for the announcement.</div>
+    <div class="faq-a">TBA. Follow <a href="https://x.com/NoUtilityDogs" target="_blank">@NoUtilityDogs</a> on X for the announcement.</div>
   </div>
 </section>
+
+<a href="#whitelist" class="sticky-cta">Get Whitelist Spot</a>
 
 <!-- FOOTER -->
 <footer>
   <p>🐕 NoUtilityDogs — Built for absolutely nothing. WAGMI 🦴</p>
   <p style="margin-top:8px">
     <a href="https://opensea.io/NoUtilityDogs" target="_blank">OpenSea</a> · 
-    <a href="https://x.com" target="_blank">Twitter/X</a>
+    <a href="https://x.com/NoUtilityDogs" target="_blank">Twitter/X</a>
   </p>
 </footer>
 
@@ -966,6 +1150,44 @@ form.addEventListener('submit', async (e) => {
   submitBtn.disabled = false;
   submitBtn.textContent = 'Apply for Whitelist →';
 });
+
+
+// ══ FABLE UPGRADES ══
+
+// Second dog strip (shuffled)
+const track2 = document.getElementById('dogsTrack2');
+if (track2) {
+  const shuffled = [...dogFiles].sort(() => Math.random() - 0.5);
+  [...shuffled, ...shuffled].forEach(src => track2.appendChild(makeCard(src)));
+}
+
+// Marquee content
+const marqueeEl = document.getElementById('marqueeInner');
+if (marqueeEl) {
+  const phrase = 'NO UTILITY ★ NO ROADMAP ★ NO PROMISES ★ JUST DOGS ★ WAGMI 🦴 ★ ';
+  marqueeEl.innerHTML = '<span>' + phrase.repeat(6) + '</span><span>' + phrase.repeat(6) + '</span>';
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+
 </script>
 </body>
 </html>
